@@ -30,8 +30,24 @@ def check_dependencies():
         subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
         return True
 
+import urllib.request
+
+def is_server_alive(port):
+    try:
+        resp = urllib.request.urlopen(f"http://localhost:{port}", timeout=1.5)
+        return resp.getcode() in [200, 302, 304]
+    except Exception:
+        return False
+
 def run_gradio(port=7860, auto_open=True):
     """Launches the Flashy Cyberpunk Neon Gradio Interface."""
+    if is_server_alive(port):
+        print(f"\n🟢 Flashy Cyberpunk Neon Interface is ALREADY RUNNING on http://localhost:{port}!")
+        if auto_open:
+            webbrowser.open(f"http://localhost:{port}")
+        print("Opening in your browser. (To restart, close the running terminal first)")
+        return
+
     print(f"\n⚡ Starting Flashy Cyberpunk Neon Interface on http://localhost:{port}...")
     if auto_open:
         def open_browser():
@@ -45,6 +61,13 @@ def run_gradio(port=7860, auto_open=True):
 
 def run_streamlit(port=8501, auto_open=True):
     """Launches the Studio Glassmorphism Streamlit Interface."""
+    if is_server_alive(port):
+        print(f"\n🟢 Studio Glassmorphism Interface is ALREADY RUNNING on http://localhost:{port}!")
+        if auto_open:
+            webbrowser.open(f"http://localhost:{port}")
+        print("Opening in your browser. (To restart, close the running terminal first)")
+        return
+
     print(f"\n🌌 Starting Studio Glassmorphism Interface on http://localhost:{port}...")
     script = os.path.join(PROJECT_DIR, "app.py")
     cmd = [

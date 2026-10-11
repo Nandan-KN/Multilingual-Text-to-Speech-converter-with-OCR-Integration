@@ -639,10 +639,21 @@ with gr.Blocks(title="Multilingual Vision Voice Canvas") as demo:
         outputs=[audio_output, status_banner]
     )
 
+import socket
+
+def get_free_port(preferred=7860):
+    for p in range(preferred, preferred + 15):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            if s.connect_ex(("127.0.0.1", p)) != 0:
+                return p
+    return preferred
+
 if __name__ == "__main__":
+    active_port = get_free_port(7860)
+    print(f"\n⚡ Launching Flashy Cyberpunk Interface on http://localhost:{active_port}...")
     demo.launch(
         server_name="0.0.0.0",
-        server_port=7860,
+        server_port=active_port,
         share=False,
         theme=gr.themes.Soft(),
         css=CYBERPUNK_NEON_CSS
