@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  gradio-app:
+    build: .
+    container_name: multilingual-ocr-gradio
+    ports:
+      - "7860:7860"
+    command: ["python", "gradio_app.py"]
+    restart: unless-stopped
+
+  streamlit-app:
+    build: .
+    container_name: multilingual-ocr-streamlit
+    ports:
+      - "8501:8501"
+    command: ["streamlit", "run", "app.py", "--server.port=8501", "--server.headless=true"]
+    restart: unless-stopped
